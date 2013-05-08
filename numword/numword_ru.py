@@ -15,9 +15,9 @@ import pymorphy
 
 _morphs = {}
 
-def get_morph(path):
+def get_morph(path, backend='cdb'):
     if not path in _morphs:
-        _morphs[path] = pymorphy.get_morph(path)
+        _morphs[path] = pymorphy.get_morph(path, backend)
     return _morphs[path]
 
 
@@ -28,7 +28,7 @@ class NumWordRU(NumWordBase):
         super(NumWordRU, self).__init__()
         # initializing morphology module for inflecting
 
-        dictionary = dictionary or pkg_resources.resource_filename('numword', 'ru.sqlite')
+        dictionary = dictionary or pkg_resources.resource_filename('numword', 'ru.cdb')
 
         if not os.path.exists(dictionary):
             raise EnvironmentError(
