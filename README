@@ -3,9 +3,18 @@ numword
 
 Python modules to convert numbers to words. Easily extensible.
 
-It is based on the project pynum2word
+from numword import numword_ru
+nw = numword_ru.NumWordRU()
+
+nw.ordinal(325002)
+'триста двадцать пять тысяч второй'
+
+nw.cardinal(325002)
+'триста двадцать пять тысяча два'
+
+nw.inflection_case = u'жр'
+nw.ordinal(325002)
+'триста двадцать пять тысяч вторая'
 
 
-For more information please visit the numword web site:
-
-    <http://code.google.com/p/numword/>
+Originally based on <http://code.google.com/p/numword/>, which is based on pynum2word.
