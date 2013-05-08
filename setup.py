@@ -13,6 +13,7 @@ setup(name='numword',
         description="Python modules to convert numbers to words. Easily extensible.",
         download_url="http://code.google.com/p/numword/downloads/",
         packages=['numword'],
+        package_data={'numword': ['ru.cdb/*.cdb']},
         classifiers=[
             'Development Status :: 5 - Production/Stable',
             'Intended Audience :: Developers',
@@ -30,5 +31,5 @@ setup(name='numword',
             'Topic :: Text Processing :: Linguistic',
             ],
         license='LGPL',
-        install_requires=['pymorphy']
+        install_requires=['pymorphy', 'python-cdb']
     )
