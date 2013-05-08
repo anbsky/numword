@@ -9,22 +9,31 @@
 # * http://www.gramota.ru/spravka/letters/?rub=rubric_92
 
 from numword_base import NumWordBase
+import os, pkg_resources
+import pymorphy
+
+
+_morphs = {}
+
+def get_morph(path):
+    if not path in _morphs:
+        _morphs[path] = pymorphy.get_morph(path)
+    return _morphs[path]
 
 
 class NumWordRU(NumWordBase):
     """NumWord RU"""
 
-    def __init__(self):
-        super(NumWordRU,self).__init__()
+    def __init__(self, dictionary=None):
+        super(NumWordRU, self).__init__()
         # initializing morphology module for inflecting
-        from pymorphy import get_morph
-        import ConfigParser
-        config = ConfigParser.RawConfigParser()
-        config.read('normalization.cfg')
-        dicts_folder = config.get('lms','dicts')
-        import os
-        if not os.path.exists(dicts_folder): quit('Please put existing dictionaries into "'+dicts_folder+'" folder!')
-        self.morph = get_morph(dicts_folder)
+
+        dictionary = dictionary or pkg_resources.resource_filename('numword', 'ru.sqlite')
+
+        if not os.path.exists(dictionary):
+            raise EnvironmentError(
+                'Please put existing dictionaries into "{}" folder or specify your own'.format(dictionary))
+        self.morph = get_morph(dictionary)
         self.inflection_case = u"им" # todo add gender for the ending of numeral ('жр')
 
     def _set_high_numwords(self, high):
@@ -264,41 +273,39 @@ class NumWordRU(NumWordBase):
                     return self.morph.inflect_ru(text.upper(), self.inflection_case + u",мн").lower()
 
 
-
-_NW = NumWordRU()
-
 def cardinal(value):
     """
     Convert to cardinal
     """
-    return _NW.cardinal(value)
+    return NumWordRU().cardinal(value)
 
 def ordinal(value):
     """
     Convert to ordinal
     """
-    return _NW.ordinal(value)
+    return NumWordRU().ordinal(value)
 
 def ordinal_number(value):
     """
     Convert to ordinal num
     """
-    return _NW.ordinal_number(value)
+    return NumWordRU().ordinal_number(value)
 
 def currency(value, longval=True):
     """
     Convert to currency
     """
-    return _NW.currency(value, longval=longval)
+    return NumWordRU().currency(value, longval=longval)
 
 def year(value, longval=True):
     """
     Convert to year
     """
-    return _NW.year(value, longval=longval)
+    return NumWordRU().year(value, longval=longval)
 
 def main():
     """Main program"""
+    _NW = NumWordRU()
     _NW.test_array()
     quit()
     for val in [
